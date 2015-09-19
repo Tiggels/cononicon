@@ -8,7 +8,7 @@ import org.hypergraphdb.HyperGraph;
  * Created by Miles on 9/16/15.
  */
 
-public class Main {
+public class CononiconServer {
 
     static HyperGraph graph;
     static PlatonicLogic logic;
