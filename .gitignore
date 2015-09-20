@@ -2,4 +2,4 @@
 workspace.xml
 tasks.xml
 target/*
-*.jdb
+conicServer/*
