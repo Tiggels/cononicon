@@ -59,10 +59,7 @@ public class ParseEN {
             // this is the parse tree of the current sentence
             Tree tree = sentence.get(TreeCoreAnnotations.TreeAnnotation.class);
             System.out.println(tree.toString());
-
-            // this is the Stanford dependency graph of the current sentence
-            SemanticGraph dependencies = sentence.get(SemanticGraphCoreAnnotations.CollapsedCCProcessedDependenciesAnnotation.class);
-            System.out.println(dependencies.toString());
+            metaAnalise(tree);
         }
 
         // This is the coreference link graph
@@ -71,5 +68,16 @@ public class ParseEN {
         // Both sentence and token offsets start at 1!
         Map<Integer, CorefChain> coreferenceGraph = document.get(CorefCoreAnnotations.CorefChainAnnotation.class);
         System.out.println(coreferenceGraph.toString());
+    }
+
+    private void metaAnalise(Tree tree) {
+        for (Tree childTree : tree.getChildrenAsList()) {
+
+            if ( childTree.getChildrenAsList().size() == 0) {
+                System.out.println(tree.label().toString() + ": " + childTree.toString());
+            } else {
+                metaAnalise(childTree);
+            }
+        }
     }
 }

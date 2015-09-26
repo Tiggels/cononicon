@@ -34,10 +34,6 @@
     <orderEntry type="library" name="Maven: cglib:cglib:3.1" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm:5.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.objenesis:objenesis:2.1" level="project" />
-    <orderEntry type="library" name="Maven: org.hypergraphdb:hgdbwordnet:1.2" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.jwordnet:jwnl:1.4_rc3" level="project" />
-    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: org.hypergraphdb:hgdbmanagement:1.2" level="project" />
     <orderEntry type="library" name="Maven: net.sf.extjwnl:extjwnl:1.9" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.12" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.slf4j:slf4j-log4j12:1.7.12" level="project" />
