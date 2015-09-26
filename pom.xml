@@ -10,12 +10,15 @@
 
     <repositories>
         <repository>
+            <!-- HGDB repo -->
             <id>hypergraphdb</id>
             <url>http://hypergraphdb.org/maven</url>
         </repository>
     </repositories>
 
     <dependencies>
+
+        <!-- JSON -->
         <dependency>
             <!-- Google Gson -->
             <groupId>com.google.code.gson</groupId>
@@ -23,27 +26,48 @@
             <version>2.3.1</version>
         </dependency>
 
+        <!-- HGBD -->
         <dependency>
             <!-- HyperGraphDB Core -->
             <groupId>org.hypergraphdb</groupId>
             <artifactId>hgdb</artifactId>
             <version>1.3</version>
+            <scope>compile</scope>
         </dependency>
-
         <dependency>
             <!-- hyperGraphDB for BerkeleyDB -->
             <groupId>org.hypergraphdb</groupId>
             <artifactId>hgbdbje</artifactId>
             <version>1.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <!-- HyperGraphDB WordNet -->
+            <groupId>org.hypergraphdb</groupId>
+            <artifactId>hgdbwordnet</artifactId>
+            <version>1.2</version>
+            <scope>compile</scope>
         </dependency>
 
+        <!-- NLP -->
+        <dependency>
+            <!-- Extended Java WordNet Library -->
+            <groupId>net.sf.extjwnl</groupId>
+            <artifactId>extjwnl</artifactId>
+            <version>1.9</version>
+        </dependency>
+        <dependency>
+            <!-- Extended Java WordNet Library Data-->
+            <groupId>net.sf.extjwnl</groupId>
+            <artifactId>extjwnl-data-wn31</artifactId>
+            <version>1.2</version>
+        </dependency>
         <dependency>
             <!-- Stanford's Wonderful NLP Parser -->
             <groupId>edu.stanford.nlp</groupId>
             <artifactId>stanford-corenlp</artifactId>
             <version>3.5.2</version>
         </dependency>
-
         <dependency>
             <!-- Stanford's ENG Model -->
             <groupId>edu.stanford.nlp</groupId>
@@ -51,7 +75,6 @@
             <version>3.5.2</version>
             <classifier>models</classifier>
         </dependency>
-
         <dependency>
             <!-- Stanford's CHI Model -->
             <groupId>edu.stanford.nlp</groupId>
