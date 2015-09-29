@@ -1,6 +1,7 @@
 package com.github.tiggels.platons;
 
 import com.github.tiggels.Server;
+import edu.stanford.nlp.ling.CoreAnnotations;
 
 /**
  * Created by Miles on 9/19/15.
@@ -8,10 +9,15 @@ import com.github.tiggels.Server;
 public class PlatonicAtom implements java.io.Serializable {
 
     private float power;
-
     private String word;
+    private String pos;
 
     public PlatonicAtom() {
+    }
+
+    public PlatonicAtom(String word, String pos) {
+        this.word = word;
+        this.pos = pos;
     }
 
     public float getPower() {
@@ -41,4 +47,14 @@ public class PlatonicAtom implements java.io.Serializable {
     public void devolve() {
         power *= Server.devolvePower;
     }
+
+    public String getPos() {
+        return pos;
+    }
+
+    public void setPos(String pos) {
+        this.pos = pos;
+    }
+
+
 }
