@@ -41,21 +41,24 @@ public class ParseEN {
     }
 
     public void analise(String text) {
-        //Parse
+        //Create some complicated stanfordNLP objects that I don't understand that well.
         List<CoreLabel> tokens = tokenizerFactory.getTokenizer(new StringReader(text)).tokenize();
         Tree tree = parser.apply(tokens);
         Tree parse = parser.apply(Sentence.toWordList(text.split(" ")));
         GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
         Collection<TypedDependency> tdl = gs.typedDependenciesCCprocessed();
 
-        tree.pennPrint();
+        tree.pennPrint(); // Print the pennTree tree
 
         System.out.println("\nCreating Atoms");
 
         for (Tree leaf : tree.getLeaves()) {
+            // Get the thing at the base of the tree, and add that to the graph
+            // Along with parent POS
             PlatonicAtom atom = new PlatonicAtom(leaf.label().value(), leaf.parent(tree).label().value());
             HGHandle handel = tempSP.add(atom);
             System.out.println("Added new atom: \"" + leaf.label().value() + "\" with type: \"" + leaf.parent(tree).label().value() + "\" @ " + handel.toString());
+            // Add the new atoms to a hashmap my name.
             tempAtoms.put(leaf.label().value(), handel);
         }
 
@@ -63,15 +66,16 @@ public class ParseEN {
 
         for (TypedDependency dep : tdl) {
 
+            // There is never a ROOT node, so skip all links with ROOT
             if (dep.dep().toString().equals("ROOT") || dep.gov().toString().equals("ROOT")) {
                 continue;
             }
 
+            // Remove Punctuation
             String depV = dep.dep().value().replaceAll("[?!.$\"]*", "");
             String govV = dep.gov().value().replaceAll("[?!.$\"]*", "");
 
-//            System.out.println("\n" + depV + "\n" + govV);
-
+            // Create a link from hashmap info
             PlatonicLink link = new PlatonicLink(
                     dep.reln().getLongName(),
                     tempAtoms.get(depV),
