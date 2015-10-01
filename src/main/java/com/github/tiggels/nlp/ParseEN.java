@@ -67,14 +67,19 @@ public class ParseEN {
                 continue;
             }
 
+            String depV = dep.dep().value().replaceAll("[?!.$\"]*", "");
+            String govV = dep.gov().value().replaceAll("[?!.$\"]*", "");
+
+//            System.out.println("\n" + depV + "\n" + govV);
+
             PlatonicLink link = new PlatonicLink(
                     dep.reln().getLongName(),
-                    tempAtoms.get(dep.dep().value()),
-                    tempAtoms.get(dep.gov().value())
+                    tempAtoms.get(depV),
+                    tempAtoms.get(govV)
             );
 
             HGHandle handel = Server.getTempSpace().add(link);
-            System.out.println("Added new link: \"" + dep.dep().value() + "\" <-" + dep.reln().getLongName() + "(" + dep.reln().getShortName() + ")" + "-> \"" + dep.gov().value() + "\" @ " + handel);
+            System.out.println("Added new link: \"" + depV + "\" <-" + dep.reln().getLongName() + "(" + dep.reln().getShortName() + ")" + "-> \"" + govV + "\" @ " + handel);
         }
 
         System.out.println("\nFinished Adding Links");
