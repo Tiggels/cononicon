@@ -1,5 +1,6 @@
 package com.github.tiggels.platons;
 
+import com.github.tiggels.Server;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGLink;
 import org.hypergraphdb.HGPlainLink;
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public class PlatonicLink extends HGPlainLink {
 
-    private String value;
+    protected String value;
 
     public PlatonicLink() {
     }
@@ -28,20 +29,5 @@ public class PlatonicLink extends HGPlainLink {
 
     public Object getValue() {
         return this.value;
-    }
-
-    public String toString() {
-        StringBuilder b = new StringBuilder(this.value == null?"null":this.value);
-        b.append('[');
-
-        for(int i = 0; i < this.getArity(); ++i) {
-            b.append(this.outgoingSet[i]);
-            if(i < this.getArity() - 1) {
-                b.append(",");
-            }
-        }
-
-        b.append(']');
-        return b.toString();
     }
 }

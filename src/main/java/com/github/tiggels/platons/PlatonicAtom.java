@@ -56,5 +56,8 @@ public class PlatonicAtom implements java.io.Serializable {
         this.pos = pos;
     }
 
-
+    @Override
+    public String toString() {
+        return word + ":" + pos + "@" + power;
+    }
 }
