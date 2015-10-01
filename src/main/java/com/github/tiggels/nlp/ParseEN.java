@@ -3,16 +3,13 @@ package com.github.tiggels.nlp;
 import com.github.tiggels.platons.PlatonicLink;
 import com.github.tiggels.platons.PlatonicAtom;
 import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.ling.IndexedWord;
 import edu.stanford.nlp.ling.Sentence;
-import edu.stanford.nlp.ling.tokensregex.PhraseTable;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 import edu.stanford.nlp.process.CoreLabelTokenFactory;
 import edu.stanford.nlp.process.PTBTokenizer;
 import edu.stanford.nlp.process.TokenizerFactory;
 import edu.stanford.nlp.trees.*;
 import org.hypergraphdb.HGHandle;
-import org.hypergraphdb.HGQuery;
 import org.hypergraphdb.HyperGraph;
 
 import com.github.tiggels.Server;
