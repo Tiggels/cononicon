@@ -1,83 +1,83 @@
 package com.github.tiggels.nlp;
 
-import edu.stanford.nlp.dcoref.CorefChain;
-import edu.stanford.nlp.dcoref.CorefCoreAnnotations;
+import com.github.tiggels.platons.PlatonicLink;
+import com.github.tiggels.platons.PlatonicAtom;
 import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.pipeline.Annotation;
-import edu.stanford.nlp.ling.CoreAnnotations;
-import edu.stanford.nlp.pipeline.StanfordCoreNLP;
-import edu.stanford.nlp.semgraph.SemanticGraph;
-import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
-import edu.stanford.nlp.trees.Tree;
-import edu.stanford.nlp.trees.TreeCoreAnnotations;
-import edu.stanford.nlp.util.CoreMap;
+import edu.stanford.nlp.ling.Sentence;
+import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
+import edu.stanford.nlp.process.CoreLabelTokenFactory;
+import edu.stanford.nlp.process.PTBTokenizer;
+import edu.stanford.nlp.process.TokenizerFactory;
+import edu.stanford.nlp.trees.*;
+import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import com.github.tiggels.Server;
+
+import java.io.StringReader;
+import java.util.*;
 
 /**
  * Created by Miles on 9/19/15.
  */
 public class ParseEN {
 
-    StanfordCoreNLP pipeline;
+    HyperGraph tempSP;
+
+    private final String PCG_MODEL = "edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz";
+
+    private final TokenizerFactory<CoreLabel> tokenizerFactory = PTBTokenizer.factory(new CoreLabelTokenFactory(), "invertible=true");
+
+    private final LexicalizedParser parser = LexicalizedParser.loadModel(PCG_MODEL);
+
+    private final TreebankLanguagePack tlp = new PennTreebankLanguagePack();
+
+    private final GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
+
+    private final HashMap<String, HGHandle> tempAtoms = new HashMap<String, HGHandle>();
 
     public ParseEN() {
-
-        // creates a StanfordCoreNLP object, with POS tagging, lemmatization, NER, parsing, and coreference resolution
-        Properties props = new Properties();
-        props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
-        pipeline = new StanfordCoreNLP(props);
+        tempSP = Server.getTempSpace();
     }
 
     public void analise(String text) {
+        //Parse
+        List<CoreLabel> tokens = tokenizerFactory.getTokenizer(new StringReader(text)).tokenize();
+        Tree tree = parser.apply(tokens);
+        Tree parse = parser.apply(Sentence.toWordList(text.split(" ")));
+        GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
+        Collection<TypedDependency> tdl = gs.typedDependenciesCCprocessed();
 
-        // create an empty Annotation just with the given text
-        Annotation document = new Annotation(text);
+        tree.pennPrint();
 
-        // run all Annotators on this text
-        pipeline.annotate(document);
+        System.out.println("\nCreating Atoms");
 
-        // these are all the sentences in this document
-        // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
-        List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
-
-        for(CoreMap sentence: sentences) {
-            // traversing the words in the current sentence
-            // a CoreLabel is a CoreMap with additional token-specific methods
-            for (CoreLabel token: sentence.get(CoreAnnotations.TokensAnnotation.class)) {
-                // this is the text of the token
-                String word = token.get(CoreAnnotations.TextAnnotation.class);
-                // this is the POS tag of the token
-                String pos = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
-                // this is the NER label of the token
-                String ne = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
-            }
-
-            // this is the parse tree of the current sentence
-            Tree tree = sentence.get(TreeCoreAnnotations.TreeAnnotation.class);
-            System.out.println(tree.toString());
-            metaAnalise(tree);
+        for (Tree leaf : tree.getLeaves()) {
+            PlatonicAtom atom = new PlatonicAtom(leaf.label().value(), leaf.parent(tree).label().value());
+            HGHandle handel = tempSP.add(atom);
+            System.out.println("Added new atom: \"" + leaf.label().value() + "\" with type: \"" + leaf.parent(tree).label().value() + "\" @ " + handel.toString());
+            tempAtoms.put(leaf.label().value(), handel);
         }
 
-        // This is the coreference link graph
-        // Each chain stores a set of mentions that link to each other,
-        // along with a method for getting the most representative mention
-        // Both sentence and token offsets start at 1!
-        Map<Integer, CorefChain> coreferenceGraph = document.get(CorefCoreAnnotations.CorefChainAnnotation.class);
-        System.out.println(coreferenceGraph.toString());
-    }
+        System.out.println("\nFinished Creating Atoms\nAdding Links");
 
-    private void metaAnalise(Tree tree) {
-        for (Tree childTree : tree.getChildrenAsList()) {
+        for (TypedDependency dep : tdl) {
 
-            if ( childTree.getChildrenAsList().size() == 0) {
-                System.out.println(tree.label().toString() + ": " + childTree.toString());
-            } else {
-                metaAnalise(childTree);
+            if (dep.dep().toString().equals("ROOT") || dep.gov().toString().equals("ROOT")) {
+                continue;
             }
+
+            PlatonicLink link = new PlatonicLink(
+                    dep.reln().getLongName(),
+                    tempAtoms.get(dep.dep().value()),
+                    tempAtoms.get(dep.gov().value())
+            );
+
+            HGHandle handel = Server.getTempSpace().add(link);
+            System.out.println("Added new link: \"" + dep.dep().value() + "\" <-" + dep.reln().getLongName() + "(" + dep.reln().getShortName() + ")" + "-> \"" + dep.gov().value() + "\" @ " + handel);
         }
+
+        System.out.println("\nFinished Adding Links");
+        System.out.println("Transitioning information from TempSpace to PlatoSpace");
     }
 }
