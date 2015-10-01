@@ -2,6 +2,7 @@ package com.github.tiggels.nlp;
 
 import com.github.tiggels.platons.PlatonicLink;
 import com.github.tiggels.platons.PlatonicAtom;
+import com.github.tiggels.trans.ATran;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
@@ -12,7 +13,7 @@ import edu.stanford.nlp.trees.*;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
 
-import com.github.tiggels.Server;
+import com.github.tiggels.Cononicon;
 
 import java.io.StringReader;
 import java.util.*;
@@ -37,10 +38,11 @@ public class ParseEN {
     private final HashMap<String, HGHandle> tempAtoms = new HashMap<String, HGHandle>();
 
     public ParseEN() {
-        tempSP = Server.getTempSpace();
+        tempSP = Cononicon.getTempSpace();
     }
 
     public void analise(String text) {
+
         //Create some complicated stanfordNLP objects that I don't understand that well.
         List<CoreLabel> tokens = tokenizerFactory.getTokenizer(new StringReader(text)).tokenize();
         Tree tree = parser.apply(tokens);
@@ -50,7 +52,12 @@ public class ParseEN {
 
         tree.pennPrint(); // Print the pennTree tree
 
-        System.out.println("\nCreating Atoms");
+        System.out.println("\nAdding Root Atom\nAdded new atom: ROOT");
+
+        PlatonicAtom root = new PlatonicAtom("ROOT","ROOT");
+        tempAtoms.put("ROOT",tempSP.add(root));
+
+        System.out.println("\nAdding Leaf Atoms");
 
         for (Tree leaf : tree.getLeaves()) {
             // Get the thing at the base of the tree, and add that to the graph
@@ -66,11 +73,6 @@ public class ParseEN {
 
         for (TypedDependency dep : tdl) {
 
-            // There is never a ROOT node, so skip all links with ROOT
-            if (dep.dep().toString().equals("ROOT") || dep.gov().toString().equals("ROOT")) {
-                continue;
-            }
-
             // Remove Punctuation
             String depV = dep.dep().value().replaceAll("[?!.$\"]*", "");
             String govV = dep.gov().value().replaceAll("[?!.$\"]*", "");
@@ -82,7 +84,7 @@ public class ParseEN {
                     tempAtoms.get(govV)
             );
 
-            HGHandle handel = Server.getTempSpace().add(link);
+            HGHandle handel = Cononicon.getTempSpace().add(link);
             System.out.println("Added new link: \"" + depV + "\" <-" + dep.reln().getLongName() + "(" + dep.reln().getShortName() + ")" + "-> \"" + govV + "\" @ " + handel);
         }
 

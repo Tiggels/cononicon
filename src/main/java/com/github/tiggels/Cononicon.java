@@ -19,7 +19,7 @@ import java.util.Scanner;
  * Created by Miles on 9/16/15.
  */
 
-public class Server {
+public class Cononicon {
 
     private static final String PLATO_SPACE = "./server/data/graphs/ps";
     private static final String QUERY_SPACE = "./server/data/graphs/qs";
