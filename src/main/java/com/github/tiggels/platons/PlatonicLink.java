@@ -13,6 +13,11 @@ public class PlatonicLink extends HGPlainLink {
     public PlatonicLink() {
     }
 
+    public PlatonicLink(HGHandle... targets) {
+        super(targets);
+        this.value = "";
+    }
+
     public PlatonicLink(String value, HGHandle... targets) {
         super(targets);
         this.value = value;

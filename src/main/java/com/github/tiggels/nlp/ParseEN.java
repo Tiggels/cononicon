@@ -2,7 +2,7 @@ package com.github.tiggels.nlp;
 
 import com.github.tiggels.platons.PlatonicLink;
 import com.github.tiggels.platons.PlatonicAtom;
-import com.github.tiggels.trans.ATran;
+import com.github.tiggels.trans.ITran;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
@@ -48,7 +48,7 @@ public class ParseEN {
         Tree tree = parser.apply(tokens);
         Tree parse = parser.apply(Sentence.toWordList(text.split(" ")));
         GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
-        Collection<TypedDependency> tdl = gs.typedDependenciesCCprocessed();
+        Collection<TypedDependency> tdl = gs.allTypedDependencies();
 
         tree.pennPrint(); // Print the pennTree tree
 
@@ -74,8 +74,8 @@ public class ParseEN {
         for (TypedDependency dep : tdl) {
 
             // Remove Punctuation
-            String depV = dep.dep().value().replaceAll("[?!.$\"]*", "");
-            String govV = dep.gov().value().replaceAll("[?!.$\"]*", "");
+            String depV = dep.dep().value().replaceAll("[?,!.$\"]*", "");
+            String govV = dep.gov().value().replaceAll("[?,!.$\"]*", "");
 
             // Create a link from hashmap info
             PlatonicLink link = new PlatonicLink(
@@ -90,5 +90,7 @@ public class ParseEN {
 
         System.out.println("\nFinished Adding Links");
         System.out.println("Transitioning information from TempSpace to PlatoSpace");
+
+        ITran.Translate();
     }
 }
