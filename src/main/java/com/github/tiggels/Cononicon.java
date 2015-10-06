@@ -1,6 +1,7 @@
 package com.github.tiggels;
 
 import com.github.tiggels.nlp.ParseEN;
+import com.github.tiggels.trans.ITran;
 import net.sf.extjwnl.data.*;
 import net.sf.extjwnl.data.list.PointerTargetNodeList;
 import net.sf.extjwnl.data.list.PointerTargetTree;
@@ -19,7 +20,7 @@ import java.util.Scanner;
  * Created by Miles on 9/16/15.
  */
 
-public class Server {
+public class Cononicon {
 
     private static final String PLATO_SPACE = "./server/data/graphs/ps";
     private static final String QUERY_SPACE = "./server/data/graphs/qs";
@@ -47,6 +48,8 @@ public class Server {
                 "                                                        ");
 
         ParseEN parse = new ParseEN();
+
+        ITran.clear(getTempSpace());
 
         System.out.println("CONONICON LOADED");
 
