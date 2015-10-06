@@ -1,6 +1,7 @@
 package com.github.tiggels;
 
 import com.github.tiggels.nlp.ParseEN;
+import com.github.tiggels.trans.ITran;
 import net.sf.extjwnl.data.*;
 import net.sf.extjwnl.data.list.PointerTargetNodeList;
 import net.sf.extjwnl.data.list.PointerTargetTree;
@@ -47,6 +48,8 @@ public class Cononicon {
                 "                                                        ");
 
         ParseEN parse = new ParseEN();
+
+        ITran.clear(getTempSpace());
 
         System.out.println("CONONICON LOADED");
 

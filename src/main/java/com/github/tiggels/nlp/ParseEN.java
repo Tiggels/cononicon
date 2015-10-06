@@ -55,7 +55,7 @@ public class ParseEN {
         System.out.println("\nAdding Root Atom\nAdded new atom: ROOT");
 
         PlatonicAtom root = new PlatonicAtom("ROOT","ROOT");
-        tempAtoms.put("ROOT",tempSP.add(root));
+        tempAtoms.put("ROOT", tempSP.add(root));
 
         System.out.println("\nAdding Leaf Atoms");
 
@@ -71,26 +71,32 @@ public class ParseEN {
 
         System.out.println("\nFinished Creating Atoms\nAdding Links");
 
-        for (TypedDependency dep : tdl) {
+        sap(tree);
 
-            // Remove Punctuation
-            String depV = dep.dep().value().replaceAll("[?,!.$\"]*", "");
-            String govV = dep.gov().value().replaceAll("[?,!.$\"]*", "");
-
-            // Create a link from hashmap info
-            PlatonicLink link = new PlatonicLink(
-                    dep.reln().getLongName(),
-                    tempAtoms.get(depV),
-                    tempAtoms.get(govV)
-            );
-
-            HGHandle handel = Cononicon.getTempSpace().add(link);
-            System.out.println("Added new link: \"" + depV + "\" <-" + dep.reln().getLongName() + "(" + dep.reln().getShortName() + ")" + "-> \"" + govV + "\" @ " + handel);
-        }
-
-        System.out.println("\nFinished Adding Links");
-        System.out.println("Transitioning information from TempSpace to PlatoSpace");
+        System.out.println("\nFinished Adding Links\nTransitioning information from TempSpace to PlatoSpace");
 
         ITran.Translate();
+    }
+
+    private HGHandle sap(Tree tree) {                   //TODO: COMMENT (I WILL, I SWEAR!)
+        if (tree.label().value().equals("ROOT")) {
+            for (Tree twig : tree.getChildrenAsList()) {
+                sap(twig);
+            }
+            return tempAtoms.get(tree.label().value());
+        } else if (tree.numChildren() < 1) {
+            return tempAtoms.get(tree.label().value());
+        } else if (tree.numChildren() == 1) {
+            return sap(tree.firstChild());
+        } else {
+            List<HGHandle> childAtoms = new ArrayList<HGHandle>();
+            for (Tree twig : tree.getChildrenAsList()) {
+                childAtoms.add(sap(twig));
+            }
+            System.out.print("\n");
+            PlatonicLink link = new PlatonicLink(tree.label().value(), childAtoms);
+            System.out.println(link.toString());
+            return Cononicon.getTempSpace().add(link);
+        }
     }
 }
