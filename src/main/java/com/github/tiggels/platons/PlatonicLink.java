@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class PlatonicLink extends HGPlainLink {
 
-    protected String value;
+    public String value;
 
     public PlatonicLink() {
     }
@@ -37,7 +37,7 @@ public class PlatonicLink extends HGPlainLink {
         this.value = value;
     }
 
-    public Object getValue() {
+    public String getValue() {
         return this.value;
     }
 
