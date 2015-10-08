@@ -52,23 +52,30 @@ public class Cononicon {
 
             ParseEN parse = new ParseEN();
 
-            GraphTran.forceClear(getTempSpace());
-
             System.out.println("CONONICON LOADED");
 
             Scanner scanner = new Scanner(System.in);
             while (scanner.hasNext()) {
-                String next = scanner.next();
+                String next = scanner.nextLine();
                 if (next.toLowerCase().equals("/exit")) {
+                    System.out.println("Exiting");
                     break;
+                } else if (next.toLowerCase().equals("/clear")) {
+                    GraphTran.clear(PS);
+                    GraphTran.clear(QS);
+                    GraphTran.clear(MS);
+                    GraphTran.clear(TS);
+                } else {
+                    parse.analise(next);
                 }
-                parse.analise(next);
             }
         } finally {
+            System.out.println("Closing Spaces");
             PS.close();
             QS.close();
             MS.close();
             TS.close();
+            System.out.println("Closed");
         }
     }
 

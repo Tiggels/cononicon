@@ -23,7 +23,7 @@ import java.util.*;
  */
 public class ParseEN {
 
-    HyperGraph tempSP;
+    HyperGraph platoSpace;
 
     private final String PCG_MODEL = "edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz";
 
@@ -38,7 +38,7 @@ public class ParseEN {
     private final HashMap<String, HGHandle> tempAtoms = new HashMap<String, HGHandle>();
 
     public ParseEN() {
-        tempSP = Cononicon.getTempSpace();
+        platoSpace = Cononicon.getPlatoSpace();
     }
 
     public void analise(String text) {
@@ -55,7 +55,7 @@ public class ParseEN {
             // Get the thing at the base of the tree, and add that to the graph
             // Along with parent POS
             PlatonicAtom atom = new PlatonicAtom(leaf.label().value(), leaf.parent(tree).label().value());
-            HGHandle handel = tempSP.add(atom);
+            HGHandle handel = platoSpace.add(atom);
             System.out.println("Added new atom: \"" + leaf.label().value() + "\" with type: \"" + leaf.parent(tree).label().value() + "\" @ " + handel.toString());
             // Add the new atoms to a hashmap my name.
             tempAtoms.put(leaf.label().value().toLowerCase(), handel);
@@ -65,9 +65,8 @@ public class ParseEN {
 
         sap(tree);
 
-        System.out.println("\nFinished Adding Links\nTransitioning information from TempSpace to PlatoSpace");
+        System.out.println("\nFinished Adding Links\nTransitioning information from platoSpaceace to PlatoSpace");
 
-        GraphTran.Translate();
     }
 
     private HGHandle sap(Tree tree) {
@@ -88,7 +87,7 @@ public class ParseEN {
             System.out.print("\n");
             PlatonicLink link = new PlatonicLink(tree.label().value(), childAtoms);
             System.out.println(link.toString());
-            return Cononicon.getTempSpace().add(link);
+            return platoSpace.add(link);
         }
     }
 }
