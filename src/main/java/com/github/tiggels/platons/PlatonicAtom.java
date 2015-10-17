@@ -1,7 +1,6 @@
 package com.github.tiggels.platons;
 
-import com.github.tiggels.Server;
-import edu.stanford.nlp.ling.CoreAnnotations;
+import com.github.tiggels.Cononicon;
 
 /**
  * Created by Miles on 9/19/15.
@@ -45,7 +44,7 @@ public class PlatonicAtom implements java.io.Serializable {
     }
 
     public void devolve() {
-        power *= Server.devolvePower;
+        power *= Cononicon.devolvePower;
     }
 
     public String getPos() {
@@ -58,6 +57,6 @@ public class PlatonicAtom implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return word + ":" + pos + "@" + power;
+        return word + "@" + power;
     }
 }

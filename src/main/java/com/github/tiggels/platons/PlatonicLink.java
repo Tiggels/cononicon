@@ -1,11 +1,11 @@
 package com.github.tiggels.platons;
 
-import com.github.tiggels.Server;
+import com.github.tiggels.Cononicon;
+import org.assertj.core.util.Lists;
 import org.hypergraphdb.HGHandle;
-import org.hypergraphdb.HGLink;
 import org.hypergraphdb.HGPlainLink;
-import org.hypergraphdb.HGValueLink;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,9 +13,14 @@ import java.util.List;
  */
 public class PlatonicLink extends HGPlainLink {
 
-    protected String value;
+    public String value;
 
     public PlatonicLink() {
+    }
+
+    public PlatonicLink(HGHandle... targets) {
+        super(targets);
+        this.value = "";
     }
 
     public PlatonicLink(String value, HGHandle... targets) {
@@ -23,11 +28,30 @@ public class PlatonicLink extends HGPlainLink {
         this.value = value;
     }
 
+    public PlatonicLink(String value, List<HGHandle> targets) {
+        super(targets.toArray(new HGHandle[targets.size()]));
+        this.value = value;
+    }
+
     public void setValue(String value) {
         this.value = value;
     }
 
-    public Object getValue() {
+    public String getValue() {
         return this.value;
+    }
+
+    @Override
+    public String toString() {
+        String str = "$>";
+        for (int i = 0; i < this.getArity(); i++) {
+            str += "[" + Cononicon.getPlatoSpace().get(this.getTargetAt(i)).toString() + "]";
+            if (i < this.getArity() - 1) {
+                str += " <---> ";
+            } else {
+                str += "<$";
+            }
+        }
+        return str;
     }
 }
